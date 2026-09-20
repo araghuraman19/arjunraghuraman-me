@@ -1,7 +1,4 @@
----
-title: SDL & Automation
-description: Self-driving labs, automation, and sensors — starting from a $100 minimal working example and building toward my own SDL hardware pipeline.
----
+# Self-Driving Labs & Automation
 
 Self-driving laboratories (SDLs) — systems that combine automated experimentation with AI-driven decision-making to close the loop between hypothesis, experiment, and the next hypothesis — are one of the more concrete ways AI is starting to reshape how chemistry and materials research actually gets done. The promise is real, but so is the barrier to entry: building a genuine SDL usually means combining expertise across robotics, electronics, and machine learning that most labs don't have in one place.
 
