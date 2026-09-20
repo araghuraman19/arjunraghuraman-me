@@ -1,0 +1,150 @@
+---
+import { getEntry, render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const entry = await getEntry("pages", "music");
+const { Content } = await render(entry);
+
+const artists = [
+  {
+    name: "Arjun Raghuraman (solo project)",
+    url: "https://open.spotify.com/artist/7CUffj4UUmj0XznIHlEtvt",
+    tracks: [
+      { title: "Falcon Funk", image: "/images/music/falcon-funk.jpg", url: "https://open.spotify.com/track/4sHu7B3NmTveJB4KUtcI5t" },
+      { title: "Blue Nile", image: "/images/music/blue-nile.jpg", url: "https://open.spotify.com/track/3RZTXeqBGeicHi7k9uxWV4" },
+      { title: "Alliance", image: "/images/music/alliance.jpg", url: "https://open.spotify.com/track/2kRUUYh57gvE9wy8Twx7Qw" },
+      { title: "Velocity", image: "/images/music/velocity.jpg", url: "https://open.spotify.com/track/7KW9zI4vL2ZOb9ePhxPm6h" },
+      { title: "Aqua Regia", image: "/images/music/aqua-regia.jpg", url: "https://open.spotify.com/track/6sKA6453ZaEAXGWRVmkM66" },
+    ],
+  },
+  {
+    name: "First Principles",
+    subtitle: "collaboration with a second musician",
+    collaboratorUrl: "https://vishsubramanian.me/",
+    url: "https://open.spotify.com/artist/6MWB66eYXF5K2b51y0uPja",
+    tracks: [
+      { title: "Replay", image: "/images/music/replay.jpg", url: "https://open.spotify.com/track/6eK0uLaLZalKqdMK4hqVeP" },
+      { title: "Cluster", image: "/images/music/cluster.jpg", url: "https://open.spotify.com/track/7vJ5Vu3Lzl9LoJ55QG1yB5" },
+      { title: "Yellowstone", image: "/images/music/yellowstone.jpg", url: "https://open.spotify.com/track/3TKC97CR26HZLS1R0GZfOo" },
+    ],
+  },
+  {
+    name: "Sugar Loaf Walker",
+    subtitle: "bass player",
+    url: "https://open.spotify.com/artist/62qGJFvCYDyY03J9kLumly",
+    tracks: [],
+  },
+];
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <article class="prose music-page">
+    <div class="music-page__header">
+      <img
+        class="music-page__photo"
+        src="/images/photo_duotone.jpg"
+        width="240"
+        height="240"
+        alt="Arjun Raghuraman, duotone portrait"
+      />
+      <h1>{entry.data.title}</h1>
+    </div>
+
+    <h2>Spotify</h2>
+    {
+      artists.map((artist) => (
+        <div class="artist-block">
+          <h3>
+            <a href={artist.url}>{artist.name}</a>
+          </h3>
+          {artist.subtitle && (
+            <p class="label-mono">
+              {artist.subtitle}
+              {artist.collaboratorUrl && (
+                <>
+                  {" "}
+                  (<a href={artist.collaboratorUrl}>site</a>)
+                </>
+              )}
+            </p>
+          )}
+          {artist.tracks.length > 0 && (
+            <div class="track-grid">
+              {artist.tracks.map((track) => (
+                <a class="track" href={track.url}>
+                  <img src={track.image} alt={`${track.title} cover art`} loading="lazy" />
+                  <span class="label-mono">{track.title}</span>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))
+    }
+
+    <p class="label-mono">Track links above are the clean canonical URLs, tracking parameters stripped for the site.</p>
+
+    <Content />
+  </article>
+</BaseLayout>
+
+<style>
+  .music-page__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .music-page__photo {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+
+  .music-page__header h1 {
+    margin: 0;
+  }
+
+  .artist-block {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-3);
+    margin-top: var(--space-3);
+  }
+
+  .artist-block h3 {
+    margin-top: 0;
+  }
+
+  .track-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+
+  .track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  .track img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--color-border);
+  }
+
+  .track .label-mono {
+    color: var(--color-text-muted);
+  }
+
+  .track:hover .label-mono {
+    color: var(--color-accent);
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+import { getEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import AxisRule from "../components/AxisRule.astro";
+
+const about = await getEntry("pages", "about");
+const music = await getEntry("pages", "music");
+const publications = await getEntry("pages", "publications");
+const sdl = await getEntry("pages", "sdl-automation");
+
+const interestAreas = [
+  {
+    title: "Statistics, Math & Wolfram",
+    href: "/statistics",
+    description:
+      "Statistics, math, and Wolfram Language — applied directly to experimental design and estimation problems.",
+  },
+  {
+    title: "SDL & Automation",
+    href: "/sdl-automation",
+    description: sdl.data.description,
+  },
+  {
+    title: "Music",
+    href: "/music",
+    description: music.data.description,
+  },
+  {
+    title: "Publications & Patents",
+    href: "/publications",
+    description: publications.data.description,
+  },
+];
+---
+
+<BaseLayout title="Home">
+  <section class="hero prose">
+    <p class="label-mono">Principal Research Scientist, Dow</p>
+    <h1>Arjun Raghuraman</h1>
+    <p>{about.data.description}</p>
+    <a href="/about">About me &rarr;</a>
+  </section>
+
+  <AxisRule />
+
+  <section class="interest-areas">
+    <h2>Interest Areas</h2>
+    <ul class="interest-list">
+      {
+        interestAreas.map((area) => (
+          <li>
+            <a class="interest-list__title" href={area.href}>
+              {area.title}
+            </a>
+            <p>{area.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="now prose">
+    <h2>Now</h2>
+    <p>
+      Co-chairing the ACS PMSE Breakthrough in Polymers (BIP) Forum, heading
+      into the chair role in 2027, and preparing for an invited panel on
+      statistics from an industrial perspective at the AIChE Annual Meeting
+      this November. <a href="/about#now">More &rarr;</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    margin-top: var(--space-2);
+  }
+
+  .hero h1 {
+    margin-top: 0.25rem;
+  }
+
+  .interest-areas {
+    margin-top: var(--space-2);
+  }
+
+  .interest-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .interest-list li {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-2);
+  }
+
+  .interest-list__title {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .interest-list p {
+    margin-top: 0.35rem;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+
+  .now {
+    margin-top: var(--space-4);
+  }
+</style>

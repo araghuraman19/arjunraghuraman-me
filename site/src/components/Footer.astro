@@ -1,0 +1,21 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <span class="label-mono">© {year} Arjun Raghuraman</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-5);
+  }
+
+  .site-footer__inner {
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const caseStudies = await getCollection("caseStudies");
+  return caseStudies.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.tagline}>
+  <article class="prose">
+    <a class="label-mono" href="/statistics">&larr; Statistics, Math &amp; Wolfram</a>
+    <h1>{entry.data.title}</h1>
+    {entry.data.tagline && <p class="tagline">{entry.data.tagline}</p>}
+    <Content />
+  </article>
+</BaseLayout>
+
+<style>
+  .tagline {
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+</style>

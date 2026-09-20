@@ -1,0 +1,53 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const caseStudies = (await getCollection("caseStudies")).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout title="Statistics, Math & Wolfram">
+  <article class="prose">
+    <h1>Statistics, Math &amp; Wolfram</h1>
+    <p>
+      Statistics, math, and Wolfram Language are applied here directly to
+      experimental design and estimation problems.
+    </p>
+    {caseStudies.length === 0 && (
+      <p class="label-mono">Case studies pending.</p>
+    )}
+    <ul class="case-study-list">
+      {
+        caseStudies.map((entry) => (
+          <li>
+            <a href={`/statistics/${entry.id}`}>{entry.data.title}</a>
+            {entry.data.tagline && <p>{entry.data.tagline}</p>}
+          </li>
+        ))
+      }
+    </ul>
+  </article>
+</BaseLayout>
+
+<style>
+  .case-study-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .case-study-list li {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-2) 0;
+  }
+
+  .case-study-list a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .case-study-list p {
+    margin-top: 0.25rem;
+    color: var(--color-text-muted);
+  }
+</style>
