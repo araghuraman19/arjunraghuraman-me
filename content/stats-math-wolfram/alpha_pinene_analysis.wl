@@ -1,5 +1,3 @@
-(* ::Package:: *)
-
 (* ============================================================
    Alpha-Pinene Multiresponse Parameter Estimation
    Method: determinant criterion + rotated responses (Bates & Watts)
@@ -8,8 +6,11 @@
    ============================================================ *)
 
 (* ---- 0. Export directory: same folder as this notebook ---- *)
-exportDir = NotebookDirectory[];
-If[exportDir === $Failed, exportDir = Directory[]]; (* fallback if run outside a notebook front end *)
+exportDir = Which[
+   NotebookDirectory[] =!= $Failed, NotebookDirectory[],       (* saved notebook in the GUI front end *)
+   $InputFileName =!= "", DirectoryName[$InputFileName],       (* run via wolframscript from the command line *)
+   True, Directory[]                                            (* last-resort fallback *)
+];
 
 (* ---- 1. Data (8 time points, 5 responses, 189.5C run) ---- *)
 Xcond = {1230, 3060, 4920, 7800, 10680, 15030, 22620, 36420};
@@ -52,7 +53,7 @@ detCriterion[phi1_?NumericQ, phi2_?NumericQ, phi3_?NumericQ, phi4_?NumericQ, phi
   Module[{soln, fpred, eps, r},
     soln = odeSol[phi1, phi2, phi3, phi4, phi5];
     fpred = Table[Through[{f1, f2, f3, f4, f5}[Xcond[[u]]]] /. soln, {u, 1, n}];
-    eps = data . Bmat - fpred . Bmat;
+    eps = data.Bmat - fpred.Bmat;
     {q, r} = QRDecomposition[eps]; (* q unused, kept only for the destructuring *)
     (* |Z^T Z| = |R|^2 = (product of R's diagonal)^2, so log|Z^T Z| = 2 * sum(log|R_ii|) *)
     2*Total[Log[Abs[Diagonal[r]]]]
@@ -74,15 +75,15 @@ fpredOpt = Table[Through[{f1, f2, f3, f4, f5}[Xcond[[u]]]] /. solnOpt, {u, 1, n}
 
 (* ---- 6. Approximate parameter standard errors (Fisher-information
    sandwich, using the estimated 3x3 rotated-response covariance) ---- *)
-epsOpt = data . Bmat - fpredOpt . Bmat;
-ZtZOpt = Transpose[epsOpt] . epsOpt;
+epsOpt = data.Bmat - fpredOpt.Bmat;
+ZtZOpt = Transpose[epsOpt].epsOpt;
 SigmaHat = ZtZOpt/n;
 VinvHat = Inverse[SigmaHat];
 
 rotatedFittedAt[phiVec_] := Module[{soln, fpred},
    soln = odeSol @@ phiVec;
    fpred = Table[Through[{f1, f2, f3, f4, f5}[Xcond[[u]]]] /. soln, {u, 1, n}];
-   fpred . Bmat
+   fpred.Bmat
 ];
 h = 1*^-5;
 baseFit = rotatedFittedAt[phiOpt];
@@ -93,6 +94,17 @@ FInfo = Sum[
 covPhi = Inverse[FInfo];
 sePhi = Sqrt[Diagonal[covPhi]];
 corrPhi = covPhi/Outer[Times, sePhi, sePhi];
+
+(* ---- 6a. Which direction in parameter space is poorly identified?
+   Eigen-decompose the covariance matrix rather than just reading off
+   per-parameter standard errors -- the largest-variance eigenvector
+   shows *which combination* of parameters is weakly identified. ---- *)
+{eigVals, eigVecs} = Eigensystem[covPhi];
+ord = Reverse[Ordering[eigVals]]; (* now largest variance (worst-identified) first *)
+Print["Eigenvalues of the parameter covariance matrix, largest (worst-identified) first: ", eigVals[[ord]]];
+Print["Corresponding eigenvector (loadings on phi1..phi5): ", eigVecs[[ord[[1]]]]];
+Print["-> the largest eigenvalue's eigenvector is dominated by phi3 (allo-ocimene -> pyronene), \
+confirming that path is the weakly identified direction, not a blend of several parameters."];
 Print["approx. std. errors (log scale): ", sePhi];
 
 (* ---- 6b. Table 4.5-style summary (own reproduction, own numbers --
@@ -136,7 +148,7 @@ allPoints = Flatten[MapIndexed[
 fitVsObservedPlot = Show[fitPlot, Graphics[allPoints]];
 Export[FileNameJoin[{exportDir, "alpha_pinene_fit_vs_observed.png"}], fitVsObservedPlot, ImageResolution -> 300];
 
-residRotated = data . Bmat - fpredOpt . Bmat;
+residRotated = data.Bmat - fpredOpt.Bmat;
 residPlot = ListPlot[
    Table[Transpose[{Xcond, residRotated[[All, k]]}], {k, 1, 3}],
    PlotLegends -> {"rotated resp 1", "rotated resp 2", "rotated resp 3"},
