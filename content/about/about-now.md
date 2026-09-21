@@ -1,6 +1,6 @@
 # About
 
-I'm a Principal Research Scientist at Dow, working across catalysis, reaction engineering, and process chemistry.
+I'm a Principal Research Scientist at Dow, working across catalysis, reaction engineering, process chemistry & scale-up.
 
 My interests span biology, chemistry, reaction engineering, process chemistry, and mathematical modeling — with statistics and Wolfram Language as key tools for tying that together. The throughline across this site is applying mathematical modeling to real experimental problems, wherever the problem happens to sit on that spectrum.
 
