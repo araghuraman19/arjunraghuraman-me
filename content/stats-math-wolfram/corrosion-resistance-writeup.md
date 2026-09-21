@@ -1,6 +1,6 @@
 # Split-Plot Designs: The Corrosion Resistance Case Study
 
-*Why pretending a restricted-randomization experiment was fully randomized can mislead you — in either direction.*
+*Why pretending a restricted-randomization experiment was fully randomized can be misleading.*
 
 ## The setup
 
