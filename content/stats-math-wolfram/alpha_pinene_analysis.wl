@@ -134,35 +134,57 @@ svdResidual = SingularValueList[data - fpredOpt];
 Print["singular values, centered data: ", svdCentered];
 Print["singular values, residuals: ", svdResidual];
 
-(* ---- 8. Plots (export at high resolution for the website) ---- *)
+(* ---- 8. Plots (export at high resolution for the website, once per
+   page theme: {suffix, frame gray, label/tick gray}. Light-mode PNGs need
+   dark text/frames for contrast against the site's near-white background;
+   dark-mode PNGs need light text/frames for contrast against near-black.
+   A single "neutral" gray can't hit good contrast in both at once, so we
+   export two PNGs per chart -- Figure.astro picks the right one via the
+   "-dark" filename suffix and the page's data-theme. ---- *)
 tgrid = Range[0, 40000, 200];
 curves = Table[Table[{t, (Through[{f1, f2, f3, f4, f5}[t]] /. solnOpt)[[k]]}, {t, tgrid}], {k, 1, 5}];
 obsPoints = Table[Table[{Xcond[[u]], data[[u, k]]}, {u, 1, n}], {k, 1, 5}];
-fitPlot = ListLinePlot[curves,
-   PlotStyle -> Dashed, PlotLegends -> labels,
-   PlotRange -> {{0, 40000}, {0, 100}}, Frame -> True,
-   FrameLabel -> {"Time (min)", "Concentration (%)"},
-   PlotLabel -> "Alpha-pinene pyrolysis: fitted vs observed", ImageSize -> 640];
 allPoints = Flatten[MapIndexed[
     Function[{pts, idx}, {PointSize[0.012], ColorData[97][idx[[1]]], Point /@ pts}], obsPoints], 1];
-fitVsObservedPlot = Show[fitPlot, Graphics[allPoints]];
-Export[FileNameJoin[{exportDir, "alpha_pinene_fit_vs_observed.png"}], fitVsObservedPlot, ImageResolution -> 300];
-
 residRotated = data.Bmat - fpredOpt.Bmat;
-residPlot = ListPlot[
-   Table[Transpose[{Xcond, residRotated[[All, k]]}], {k, 1, 3}],
-   PlotLegends -> {"rotated resp 1", "rotated resp 2", "rotated resp 3"},
-   Frame -> True, FrameLabel -> {"Time (min)", "Residual"},
-   GridLines -> {None, {0}}, PlotLabel -> "Rotated-response residuals vs time",
-   ImageSize -> 500];
-Export[FileNameJoin[{exportDir, "rotated_residuals_vs_time.png"}], residPlot, ImageResolution -> 300];
 
-svdPlot = ListLogPlot[{svdCentered, svdResidual},
-   PlotMarkers -> {Automatic, 10}, PlotStyle -> Thick,
-   PlotLegends -> {"centered data matrix", "residual matrix (5-response fit)"},
-   Frame -> True, FrameLabel -> {"Singular value index", "Singular value (log scale)"},
-   PlotLabel -> "Singular values: detecting response dependencies",
-   Joined -> True, ImageSize -> 520];
-Export[FileNameJoin[{exportDir, "singular_values_diagnostic.png"}], svdPlot, ImageResolution -> 300];
+themeSpecs = {{"", 0.35, 0.3}, {"-dark", 0.65, 0.75}}; (* {suffix, frameGray, labelGray} *)
+Do[
+  Module[{suffix = spec[[1]], frameGray = spec[[2]], labelGray = spec[[3]],
+     fitPlotTheme, fitVsObservedPlotTheme, residPlotTheme, svdPlotTheme},
+
+    fitPlotTheme = ListLinePlot[curves,
+       PlotStyle -> Dashed, PlotLegends -> labels,
+       PlotRange -> {{0, 40000}, {0, 100}}, Frame -> True,
+       FrameLabel -> {"Time (min)", "Concentration (%)"},
+       PlotLabel -> "Alpha-pinene pyrolysis: fitted vs observed", ImageSize -> 640,
+       Background -> None, FrameStyle -> GrayLevel[frameGray],
+       LabelStyle -> Directive[GrayLevel[labelGray], FontFamily -> "Helvetica"]];
+    fitVsObservedPlotTheme = Show[fitPlotTheme, Graphics[allPoints], Background -> None];
+    Export[FileNameJoin[{exportDir, "alpha_pinene_fit_vs_observed" <> suffix <> ".png"}],
+      fitVsObservedPlotTheme, ImageResolution -> 300, Background -> None];
+
+    residPlotTheme = ListPlot[
+       Table[Transpose[{Xcond, residRotated[[All, k]]}], {k, 1, 3}],
+       PlotLegends -> {"rotated resp 1", "rotated resp 2", "rotated resp 3"},
+       Frame -> True, FrameLabel -> {"Time (min)", "Residual"},
+       GridLines -> {None, {0}}, PlotLabel -> "Rotated-response residuals vs time",
+       ImageSize -> 500, Background -> None, FrameStyle -> GrayLevel[frameGray],
+       LabelStyle -> Directive[GrayLevel[labelGray], FontFamily -> "Helvetica"]];
+    Export[FileNameJoin[{exportDir, "rotated_residuals_vs_time" <> suffix <> ".png"}],
+      residPlotTheme, ImageResolution -> 300, Background -> None];
+
+    svdPlotTheme = ListLogPlot[{svdCentered, svdResidual},
+       PlotMarkers -> {Automatic, 10}, PlotStyle -> Thick,
+       PlotLegends -> {"centered data matrix", "residual matrix (5-response fit)"},
+       Frame -> True, FrameLabel -> {"Singular value index", "Singular value (log scale)"},
+       PlotLabel -> "Singular values: detecting response dependencies",
+       Joined -> True, ImageSize -> 520, Background -> None, FrameStyle -> GrayLevel[frameGray],
+       LabelStyle -> Directive[GrayLevel[labelGray], FontFamily -> "Helvetica"]];
+    Export[FileNameJoin[{exportDir, "singular_values_diagnostic" <> suffix <> ".png"}],
+      svdPlotTheme, ImageResolution -> 300, Background -> None];
+  ],
+  {spec, themeSpecs}
+];
 
 Print["Done. PNGs exported to: ", exportDir];

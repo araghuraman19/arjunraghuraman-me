@@ -117,19 +117,28 @@ coatDevMeans = GroupBy[devData, #Coating &, Mean[#Ydev & /@ #] &];
 rawPts = Table[{Position[coatOrder, devData[[i]]["Coating"]][[1, 1]] + RandomReal[{-0.12, 0.12}], devData[[i]]["Ydev"]}, {i, Length[devData]}];
 coatMeanPts = Table[{c, coatDevMeans[coatOrder[[c]]]}, {c, 4}];
 
-p1 = Graphics[{{GrayLevel[0.55], PointSize[0.02], Point /@ heatPts}, Table[errBarPrims[tempMeanPts[[i, 1]], tempMeanPts[[i, 2]], tempSE, Red], {i, 3}]},
-   Frame -> True, FrameLabel -> {"Furnace Temperature (\[Degree]C)", "Corrosion Resistance"},
-   PlotLabel -> Style["Whole-plot: temperature (SE = 12.1)\nno clear pattern, p = 0.21", 15, Black],
-   FrameStyle -> Directive[Black, Thickness[0.002]], LabelStyle -> Directive[Black, 15, FontFamily -> "Helvetica"],
-   PlotRange -> {{350, 390}, {0, 220}}, AspectRatio -> 1, ImageSize -> 420, Axes -> False, Background -> White];
-p2 = Graphics[{{GrayLevel[0.55], PointSize[0.016], Point /@ rawPts}, Table[errBarPrims[coatMeanPts[[c, 1]], coatMeanPts[[c, 2]], coatSE, Red], {c, 4}]},
-   Frame -> True, FrameTicks -> {{Automatic, None}, {Table[{c, coatOrder[[c]]}, {c, 4}], None}},
-   FrameLabel -> {"Coating", "Deviation from heat mean"},
-   PlotLabel -> Style["Subplot: coating (SE = 4.53)\nC4 clearly wins, p = 0.002", 15, Black],
-   FrameStyle -> Directive[Black, Thickness[0.002]], LabelStyle -> Directive[Black, 15, FontFamily -> "Helvetica"],
-   PlotRange -> {{0.5, 4.5}, {-60, 60}}, AspectRatio -> 1, ImageSize -> 420, Axes -> False, Background -> White];
-(* explicit Background -> White on the panels, the row, and the Export: renders identically in dark- or light-mode notebooks *)
-finalFig = GraphicsRow[{p1, p2}, ImageSize -> 900, Spacings -> 60, Background -> White];
-finalFig
-Export[FileNameJoin[{exportDir, "corrosion_splitplot_summary.png"}], finalFig, ImageResolution -> 300, Background -> White];
-Print["Done. PNG exported to: ", exportDir];
+(* Transparent Background on the panels, the row, and the Export. Exported once per
+   page theme: {suffix, frame gray, label gray} -- light-mode needs dark text/frames
+   for contrast against the site's near-white background, dark-mode needs light
+   text/frames for contrast against near-black. Figure.astro picks the right PNG via
+   the "-dark" filename suffix and the page's data-theme. *)
+themeSpecs = {{"", 0.35, 0.3}, {"-dark", 0.65, 0.75}}; (* {suffix, frameGray, labelGray} *)
+Do[
+  Module[{suffix = spec[[1]], frameGray = spec[[2]], labelGray = spec[[3]], p1Theme, p2Theme, finalFigTheme},
+    p1Theme = Graphics[{{GrayLevel[0.55], PointSize[0.02], Point /@ heatPts}, Table[errBarPrims[tempMeanPts[[i, 1]], tempMeanPts[[i, 2]], tempSE, Red], {i, 3}]},
+       Frame -> True, FrameLabel -> {"Furnace Temperature (\[Degree]C)", "Corrosion Resistance"},
+       PlotLabel -> Style["Whole-plot: temperature (SE = 12.1)\nno clear pattern, p = 0.21", 15, GrayLevel[labelGray]],
+       FrameStyle -> Directive[GrayLevel[frameGray], Thickness[0.002]], LabelStyle -> Directive[GrayLevel[labelGray], 15, FontFamily -> "Helvetica"],
+       PlotRange -> {{350, 390}, {0, 220}}, AspectRatio -> 1, ImageSize -> 420, Axes -> False, Background -> None];
+    p2Theme = Graphics[{{GrayLevel[0.55], PointSize[0.016], Point /@ rawPts}, Table[errBarPrims[coatMeanPts[[c, 1]], coatMeanPts[[c, 2]], coatSE, Red], {c, 4}]},
+       Frame -> True, FrameTicks -> {{Automatic, None}, {Table[{c, coatOrder[[c]]}, {c, 4}], None}},
+       FrameLabel -> {"Coating", "Deviation from heat mean"},
+       PlotLabel -> Style["Subplot: coating (SE = 4.53)\nC4 clearly wins, p = 0.002", 15, GrayLevel[labelGray]],
+       FrameStyle -> Directive[GrayLevel[frameGray], Thickness[0.002]], LabelStyle -> Directive[GrayLevel[labelGray], 15, FontFamily -> "Helvetica"],
+       PlotRange -> {{0.5, 4.5}, {-60, 60}}, AspectRatio -> 1, ImageSize -> 420, Axes -> False, Background -> None];
+    finalFigTheme = GraphicsRow[{p1Theme, p2Theme}, ImageSize -> 900, Spacings -> 60, Background -> None];
+    Export[FileNameJoin[{exportDir, "corrosion_splitplot_summary" <> suffix <> ".png"}], finalFigTheme, ImageResolution -> 300, Background -> None];
+  ],
+  {spec, themeSpecs}
+];
+Print["Done. PNGs exported to: ", exportDir];

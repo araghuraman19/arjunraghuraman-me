@@ -6,10 +6,14 @@ interface Props {
 }
 
 const { src, alt, caption } = Astro.props;
+// Convention: chart exports (e.g. Wolfram plots) ship as a light-mode PNG at
+// `src` plus a dark-mode sibling with a `-dark` suffix before the extension.
+const darkSrc = src.replace(/(\.[^./]+)$/, "-dark$1");
 ---
 
 <figure class="figure">
-  <img src={src} alt={alt} loading="lazy" />
+  <img class="figure__img figure__img--light" src={src} alt={alt} loading="lazy" />
+  <img class="figure__img figure__img--dark" src={darkSrc} alt={alt} loading="lazy" />
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
 
@@ -18,9 +22,35 @@ const { src, alt, caption } = Astro.props;
     margin: var(--space-3) 0;
   }
 
-  .figure img {
+  .figure__img {
     border: 1px solid var(--color-border);
     width: 100%;
+  }
+
+  /* Chart PNGs are styled per theme at export time (can't be re-themed via
+     CSS like the site's own SVG), so ship both and toggle with the same
+     data-theme mechanism used for the nav's sun/moon icons. display:none
+     keeps native lazy-loading from fetching the hidden variant. */
+  .figure__img--dark {
+    display: none;
+  }
+
+  :root[data-theme="dark"] .figure__img--light {
+    display: none;
+  }
+
+  :root[data-theme="dark"] .figure__img--dark {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not([data-theme="dark"]) .figure__img--light {
+      display: none;
+    }
+
+    :root:not([data-theme="light"]):not([data-theme="dark"]) .figure__img--dark {
+      display: block;
+    }
   }
 
   .figure figcaption {

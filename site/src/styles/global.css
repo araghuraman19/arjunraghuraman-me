@@ -8,6 +8,7 @@
   --color-accent-contrast: #f7f7f5;
   --color-axis-border: #deddd8;
   --color-axis-tick: #8b897f;
+  color-scheme: light;
 
   --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -21,14 +22,41 @@
   --space-5: 4rem;
 }
 
+/* Dark variant — applied on explicit user choice via data-theme="dark".
+   The inline anti-FOUC script in BaseLayout always sets this attribute
+   before first paint, so this rule covers every JS-enabled visit. */
+:root[data-theme="dark"] {
+  --color-bg: #18191b;
+  --color-text: #ece9e3;
+  --color-text-muted: #9a988f;
+  --color-border: #313236;
+  --color-accent: #4f9c8c; /* lightened, desaturated relative to the light-mode teal so it doesn't glow on dark */
+  --color-accent-contrast: #18191b;
+  --color-axis-border: #2a2b2f;
+  --color-axis-tick: #7f7d75;
+  color-scheme: dark;
+}
+
+/* No-JS fallback: if the anti-FOUC script never ran, data-theme is never
+   set, so fall back to matching system preference via CSS alone. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --color-bg: #18191b;
+    --color-text: #ece9e3;
+    --color-text-muted: #9a988f;
+    --color-border: #313236;
+    --color-accent: #4f9c8c;
+    --color-accent-contrast: #18191b;
+    --color-axis-border: #2a2b2f;
+    --color-axis-tick: #7f7d75;
+    color-scheme: dark;
+  }
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-html {
-  color-scheme: light;
 }
 
 body {
@@ -39,6 +67,7 @@ body {
   font-size: 1rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 /* Quantitative Minimalism forbids shadows and rounded corners everywhere */
@@ -142,6 +171,29 @@ pre {
 pre code {
   border: none;
   padding: 0;
+}
+
+/* Shiki dual-theme syntax highlighting (astro.config.mjs sets
+   markdown.shikiConfig.themes + defaultColor: false, which emits
+   --shiki-light/--shiki-dark custom properties instead of baked-in colors). */
+pre.astro-code,
+pre.astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+:root[data-theme="dark"] pre.astro-code,
+:root[data-theme="dark"] pre.astro-code span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) pre.astro-code,
+  :root:not([data-theme="light"]):not([data-theme="dark"]) pre.astro-code span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+  }
 }
 
 img {
