@@ -3,7 +3,6 @@ import { getEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import AxisRule from "../components/AxisRule.astro";
 
-const about = await getEntry("pages", "about");
 const music = await getEntry("pages", "music");
 const publications = await getEntry("pages", "publications");
 const sdl = await getEntry("pages", "sdl-automation");
@@ -37,7 +36,7 @@ const interestAreas = [
   <section class="hero prose">
     <p class="label-mono">Principal Research Scientist, Dow</p>
     <h1>Arjun Raghuraman</h1>
-    <p>{about.data.description}</p>
+    <p>Scientist &amp; Musician</p>
     <a href="/about">About me &rarr;</a>
   </section>
 
