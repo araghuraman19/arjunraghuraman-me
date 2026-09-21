@@ -68,4 +68,4 @@ This page sticks to the estimation method itself (weighted least squares general
 
 ---
 
-**Wolfram Language script:** `alpha_pinene_analysis.wl` (companion file) reproduces every number and plot on this page — data, ODE model, rotation matrix, determinant-criterion fit, singular value diagnostics, and residual plots — so you can regenerate high-resolution assets for the site directly.
+**Want the Wolfram Language code behind this?** It's not proprietary — the method is straight out of Bates & Watts — but a few of the tricks in it (using `SingularValueList` to catch data dependencies before fitting anything, eigen-decomposing the parameter covariance to isolate a poorly-identified direction) aren't things you see every day in a chemical engineering context. [Get in touch](/contact) and I'm happy to send it over.

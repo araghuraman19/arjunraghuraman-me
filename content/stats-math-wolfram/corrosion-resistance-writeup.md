@@ -1,6 +1,6 @@
 # Split-Plot Designs: The Corrosion Resistance Case Study
 
-*Why pretending a restricted-randomization experiment was fully randomized can be misleading.*
+*Why pretending a restricted-randomization experiment was fully randomized can mislead you — in either direction.*
 
 ## The setup
 
@@ -57,4 +57,4 @@ Split-plot structure isn't a nuisance to average away — it's telling you somet
 
 ---
 
-**Wolfram Language script:** `CorrosionSplitPlot.wl` (companion file) reproduces the data, both the naive pooled analysis and the correct split-plot decomposition, the variance component estimates, and the summary plot.
+**Want the Wolfram Language code behind this?** [Get in touch](/contact) and I'm happy to send over the script — the data, both the naive pooled analysis and the correct split-plot decomposition, the variance component estimates, and the summary plot.
