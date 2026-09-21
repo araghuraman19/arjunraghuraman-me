@@ -39,7 +39,9 @@ const interestAreas = [
     <a href="/about">About me &rarr;</a>
   </section>
 
-  <AxisRule />
+  <div class="axis-rule-wrap">
+    <AxisRule ticks={[0, 0.25, 0.5, 0.75, 1]} />
+  </div>
 
   <section class="interest-areas">
     <h2>Interest Areas</h2>
@@ -71,6 +73,10 @@ const interestAreas = [
 <style>
   .hero {
     margin-top: var(--space-2);
+  }
+
+  .axis-rule-wrap {
+    padding-top: var(--space-3);
   }
 
   .interest-areas {
