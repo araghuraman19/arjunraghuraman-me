@@ -23,5 +23,5 @@ This ties directly into Sterling Baird's own SDL course — the same Sterling Ba
 
 If you want to go deeper on self-driving labs, these are two places I'd start:
 
-- [**The Matter Lab**](https://www.matter.toronto.edu/) — Alán Aspuru-Guzik's group at the University of Toronto, one of the leading research groups working on self-driving labs and AI-accelerated materials and chemistry discovery.
+- [**The Matter Lab**](https://www.matter.toronto.edu/) — a group at the University of Toronto led by principal investigators Alán Aspuru-Guzik and Varinia Bernales, one of the leading research groups working on self-driving labs and AI-accelerated materials and chemistry discovery.
 - [**Varinia Bernales**](https://bernales.org/) — Varinia's page, a great resource for anyone getting into SDLs, especially if you're interested in agentic platforms for quantum chemistry (check out the El Agente platform, for example).
