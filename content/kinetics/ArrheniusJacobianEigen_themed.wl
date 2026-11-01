@@ -260,14 +260,18 @@ panel[u_, col_, title_, labs_] := ListLinePlot[{Transpose[{TC, u[[All, 1]]}], Tr
    FrameLabel -> fl["Temperature (\[Degree]C)", "Normalized sensitivity"],
    Epilog -> labs, ImageSize -> 440, Evaluate[style]];
 
-fig1 = GraphicsRow[{
+fig1Panels = {
    panel[uS, cStd, Row[{"Standard form: columns ", NumberForm[angS, 2], "\[Degree] apart"}],
      {Text[Style["\[PartialD]k/\[PartialD]A and \[Minus]\[PartialD]k/\[PartialD]Ea\nlie on top of each other", 11, ink], {52, 0.5}, {-1, 0}]}],
    panel[uR, cRef, Row[{"Centered form: columns ", Round[angR], "\[Degree] apart"}],
      {Text[Style["\[PartialD]k/\[PartialD]\!\(\*SubscriptBox[\(k\), \(ref\)]\)", 11, ink], {91.5, uR[[-1, 1]]}, {-1, 0}],
-      Text[Style["\[Minus]\[PartialD]k/\[PartialD]Ea", 11, ink], {91.5, -uR[[-1, 2]]}, {-1, 0}]}]},
-  Spacings -> 10, ImageSize -> 920, Background -> bgC]
+      Text[Style["\[Minus]\[PartialD]k/\[PartialD]Ea", 11, ink], {91.5, -uR[[-1, 2]]}, {-1, 0}]}]};
+fig1 = GraphicsRow[fig1Panels, Spacings -> 10, ImageSize -> 920, Background -> bgC]
 exportFig["Fig1_sensitivity_columns.png", fig1];
+(* Stacked variant for phone-width pages: the side-by-side row scales down to ~0.4x on a phone, which makes
+   the panel labels unreadably small. The site swaps this in below 640 px (Figure.astro, narrowSrc). *)
+fig1Stacked = GraphicsColumn[fig1Panels, Spacings -> 10, ImageSize -> 440, Background -> bgC];
+exportFig["Fig1_sensitivity_columns-stacked.png", fig1Stacked];
 
 
 (* ::Subsection:: *)

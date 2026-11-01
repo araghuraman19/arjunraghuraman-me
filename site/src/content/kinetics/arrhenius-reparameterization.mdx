@@ -8,11 +8,11 @@ import Figure from "../../components/Figure.astro";
 
 The chemical engineering literature often uses a reparameterized Arrhenius expression, written around a reference temperature. As someone trained in organic and medicinal chemistry, I hadn't come across it before. This article explains the advantages of the reparameterization, which was proposed by Box (G. E. P. Box, "Fitting empirical data," *Ann. N.Y. Acad. Sci.* 86, 792–816, 1960).
 
-The example here is simulated so the true answer is known: Ea = 80 kJ/mol, k = 0.01 s⁻¹ at 70 °C, duplicate runs at 50, 60, 70, 80 and 90 °C, and constant additive noise on k. Fitted in the standard form, k = A·exp(−Ea/RT), with `NonlinearModelFit`, the estimates of A and Ea are correlated at **ρ = −0.99986**. To four decimal places the data cannot tell a high-A, high-Ea pair from a low-A, low-Ea one.
+The example here is simulated so the true answer is known: Ea = 80 kJ/mol, k = 0.01 s⁻¹ at 70 °C, duplicate runs at 50, 60, 70, 80 and 90 °C, and constant additive noise on k. Fitted in the standard form, k = A·exp(−Ea/RT), with `NonlinearModelFit`, the estimates of A and Ea are correlated at **ρ = +0.99986** (the two sensitivity columns have cosine −0.99986). To four decimal places the data cannot tell a high-A, high-Ea pair from a low-A, low-Ea one.
 
 ## Highly correlated parameters
 
-For a single response, least squares sees the parameters through the Jacobian J: one row per run, one column per parameter, each entry ∂k/∂θ at the optimum. Wolfram gives it symbolically in one line:
+For a single response, least squares sees the parameters through the Jacobian J: one row per run, one column per parameter, each entry ∂k/∂θ at the optimum. Wolfram gives it symbolically in a couple of lines:
 
 ```wolfram
 modelStd = A Exp[-Ea/(R T)];
@@ -26,7 +26,8 @@ In the standard form, the sensitivity to A is k/A and the sensitivity to Ea is �
 
 <Figure
   src="/images/kinetics/arrhenius_sensitivity_columns.png"
-  alt="Two panels of normalized sensitivity versus temperature. Left, standard form: the curves for ∂k/∂A and −∂k/∂Ea coincide. Right, centered form: ∂k/∂kref rises steadily while −∂k/∂Ea rises, then turns over and goes negative at 90 °C."
+  narrowSrc="/images/kinetics/arrhenius_sensitivity_columns-stacked.png"
+  alt="Two panels of normalized sensitivity versus temperature. Standard form: the curves for ∂k/∂A and −∂k/∂Ea coincide. Centered form: ∂k/∂kref rises steadily while −∂k/∂Ea rises, then turns over and goes negative at 90 °C."
   caption="Fig. 1. The two columns of J, evaluated at the least-squares optimum and each scaled to unit length. Standard form: indistinguishable. Centered form: the sensitivity to Ea changes sign near Tref, which makes it orthogonal to the sensitivity to kref."
 />
 

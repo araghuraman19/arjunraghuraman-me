@@ -3,17 +3,28 @@ interface Props {
   src: string;
   alt: string;
   caption?: string;
+  /** Optional stacked/narrow export (with its own `-dark` sibling), swapped in
+      below 640px so multi-panel figures stay legible on phones. */
+  narrowSrc?: string;
 }
 
-const { src, alt, caption } = Astro.props;
+const { src, alt, caption, narrowSrc } = Astro.props;
 // Convention: chart exports (e.g. Wolfram plots) ship as a light-mode PNG at
 // `src` plus a dark-mode sibling with a `-dark` suffix before the extension.
-const darkSrc = src.replace(/(\.[^./]+)$/, "-dark$1");
+const toDark = (path: string) => path.replace(/(\.[^./]+)$/, "-dark$1");
+const darkSrc = toDark(src);
+const narrowMedia = "(max-width: 640px)";
 ---
 
 <figure class="figure">
-  <img class="figure__img figure__img--light" src={src} alt={alt} loading="lazy" />
-  <img class="figure__img figure__img--dark" src={darkSrc} alt={alt} loading="lazy" />
+  <picture class="figure__img figure__img--light">
+    {narrowSrc && <source media={narrowMedia} srcset={narrowSrc} />}
+    <img src={src} alt={alt} loading="lazy" />
+  </picture>
+  <picture class="figure__img figure__img--dark">
+    {narrowSrc && <source media={narrowMedia} srcset={toDark(narrowSrc)} />}
+    <img src={darkSrc} alt={alt} loading="lazy" />
+  </picture>
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
 
@@ -23,6 +34,11 @@ const darkSrc = src.replace(/(\.[^./]+)$/, "-dark$1");
   }
 
   .figure__img {
+    display: block;
+  }
+
+  .figure__img img {
+    display: block;
     border: 1px solid var(--color-border);
     width: 100%;
   }
