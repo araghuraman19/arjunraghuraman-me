@@ -93,12 +93,12 @@ const isActive = (href: string) =>
   .site-nav__brand {
     font-family: var(--font-mono);
     font-size: 0.95rem;
-    color: var(--color-text);
+    color: var(--color-nav);
     text-decoration: none;
   }
 
   .site-nav__brand:hover {
-    color: var(--color-accent);
+    color: var(--color-text);
   }
 
   nav ul {
@@ -113,7 +113,7 @@ const isActive = (href: string) =>
   nav a {
     font-family: var(--font-mono);
     font-size: 0.85rem;
-    color: var(--color-text-muted);
+    color: var(--color-nav);
     text-decoration: none;
     padding-bottom: 2px;
     border-bottom: 1px solid transparent;
@@ -124,7 +124,7 @@ const isActive = (href: string) =>
   }
 
   nav a[aria-current="page"] {
-    color: var(--color-text);
+    color: var(--color-nav);
     border-bottom-color: var(--color-accent);
   }
 

@@ -13,6 +13,7 @@
   --color-accent-contrast: #18191b;
   --color-axis-border: #2a2b2f;
   --color-axis-tick: #7f7d75;
+  --color-nav: #fa8f2b; /* Wolfram StandardOrange, RGBColor[0.98, 0.56, 0.17] */
   color-scheme: dark;
 
   --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -37,6 +38,7 @@
   --color-accent-contrast: #f7f7f5;
   --color-axis-border: #deddd8;
   --color-axis-tick: #8b897f;
+  --color-nav: #a7601d; /* StandardOrange at 67% brightness: same hue, 4.5:1 on the light background */
   color-scheme: light;
 }
 

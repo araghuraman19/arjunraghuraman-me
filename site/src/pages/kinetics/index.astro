@@ -11,14 +11,17 @@ const articles = (await getCollection("kinetics")).sort(
   <article class="prose">
     <h1>Kinetics &amp; PK</h1>
     <p>
-      A rate law fitted to reactor data and a compartment model fitted to
-      plasma concentrations are the same problem underneath: a nonlinear
-      model, a handful of parameters, and data that may or may not pin them
-      down. The same toolkit applies to both: nonlinear least squares, the
-      Jacobian and the information matrix it builds, parameter
-      identifiability, and experimental design that puts the runs where the
-      information is. The worked examples here use Wolfram Language
-      throughout.
+      Rate laws fitted to reactor data and a compartment model fitted to
+      plasma and metabolite concentrations share the same core structure: a
+      nonlinear model with several parameters, multiple responses that may be
+      correlated, and data that may or may not identify every parameter
+      individually. Pharmacokinetics adds a population layer, because
+      parameters vary from subject to subject, but the toolkit underneath is
+      common to both: maximum-likelihood estimation across responses, the
+      parameter Jacobian and the information matrix built from it,
+      identifiability analysis, and experimental design that chooses runs to
+      maximize information about the parameters. The worked examples use
+      Wolfram Language throughout.
     </p>
     <ul class="article-list">
       {
