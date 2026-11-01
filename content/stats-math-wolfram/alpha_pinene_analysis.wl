@@ -148,39 +148,43 @@ allPoints = Flatten[MapIndexed[
     Function[{pts, idx}, {PointSize[0.012], ColorData[97][idx[[1]]], Point /@ pts}], obsPoints], 1];
 residRotated = data.Bmat - fpredOpt.Bmat;
 
-themeSpecs = {{"", 0.35, 0.3}, {"-dark", 0.65, 0.75}}; (* {suffix, frameGray, labelGray} *)
+(* {suffix, frame color, label color}: the site's muted and text tokens for each theme *)
+themeSpecs = {{"", RGBColor["#5c5c58"], RGBColor["#232323"]}, {"-dark", RGBColor["#9a988f"], RGBColor["#ece9e3"]}};
+(* Every plot shares one width, font size and padding, with the legend below (adds height, not
+   width), so all three scale identically when the page shows them at full column width. *)
+plotW = 640; plotFont = 13; plotPad = {{70, 20}, {50, 30}};
 Do[
-  Module[{suffix = spec[[1]], frameGray = spec[[2]], labelGray = spec[[3]],
+  Module[{suffix = spec[[1]], frameC = spec[[2]], labelC = spec[[3]],
      fitPlotTheme, fitVsObservedPlotTheme, residPlotTheme, svdPlotTheme},
 
     fitPlotTheme = ListLinePlot[curves,
-       PlotStyle -> Dashed, PlotLegends -> labels,
+       PlotStyle -> Dashed, PlotLegends -> Placed[LineLegend[Automatic, labels, LegendLayout -> "Row"], Below],
        PlotRange -> {{0, 40000}, {0, 100}}, Frame -> True,
        FrameLabel -> {"Time (min)", "Concentration (%)"},
-       PlotLabel -> "Alpha-pinene pyrolysis: fitted vs observed", ImageSize -> 640,
-       Background -> None, FrameStyle -> GrayLevel[frameGray],
-       LabelStyle -> Directive[GrayLevel[labelGray], FontFamily -> "Helvetica"]];
+       PlotLabel -> "Alpha-pinene pyrolysis: fitted vs observed", ImageSize -> plotW,
+       Background -> None, FrameStyle -> frameC, ImagePadding -> plotPad,
+       LabelStyle -> Directive[labelC, FontFamily -> "Helvetica", FontSize -> plotFont]];
     fitVsObservedPlotTheme = Show[fitPlotTheme, Graphics[allPoints], Background -> None];
     Export[FileNameJoin[{exportDir, "alpha_pinene_fit_vs_observed" <> suffix <> ".png"}],
       fitVsObservedPlotTheme, ImageResolution -> 300, Background -> None];
 
     residPlotTheme = ListPlot[
        Table[Transpose[{Xcond, residRotated[[All, k]]}], {k, 1, 3}],
-       PlotLegends -> {"rotated resp 1", "rotated resp 2", "rotated resp 3"},
+       PlotLegends -> Placed[PointLegend[Automatic, {"rotated resp 1", "rotated resp 2", "rotated resp 3"}, LegendLayout -> "Row"], Below],
        Frame -> True, FrameLabel -> {"Time (min)", "Residual"},
        GridLines -> {None, {0}}, PlotLabel -> "Rotated-response residuals vs time",
-       ImageSize -> 500, Background -> None, FrameStyle -> GrayLevel[frameGray],
-       LabelStyle -> Directive[GrayLevel[labelGray], FontFamily -> "Helvetica"]];
+       ImageSize -> plotW, Background -> None, FrameStyle -> frameC, ImagePadding -> plotPad,
+       LabelStyle -> Directive[labelC, FontFamily -> "Helvetica", FontSize -> plotFont]];
     Export[FileNameJoin[{exportDir, "rotated_residuals_vs_time" <> suffix <> ".png"}],
       residPlotTheme, ImageResolution -> 300, Background -> None];
 
     svdPlotTheme = ListLogPlot[{svdCentered, svdResidual},
        PlotMarkers -> {Automatic, 10}, PlotStyle -> Thick,
-       PlotLegends -> {"centered data matrix", "residual matrix (5-response fit)"},
+       PlotLegends -> Placed[LineLegend[Automatic, {"centered data matrix", "residual matrix (5-response fit)"}, LegendLayout -> "Row"], Below],
        Frame -> True, FrameLabel -> {"Singular value index", "Singular value (log scale)"},
        PlotLabel -> "Singular values: detecting response dependencies",
-       Joined -> True, ImageSize -> 520, Background -> None, FrameStyle -> GrayLevel[frameGray],
-       LabelStyle -> Directive[GrayLevel[labelGray], FontFamily -> "Helvetica"]];
+       Joined -> True, ImageSize -> plotW, Background -> None, FrameStyle -> frameC, ImagePadding -> plotPad,
+       LabelStyle -> Directive[labelC, FontFamily -> "Helvetica", FontSize -> plotFont]];
     Export[FileNameJoin[{exportDir, "singular_values_diagnostic" <> suffix <> ".png"}],
       svdPlotTheme, ImageResolution -> 300, Background -> None];
   ],

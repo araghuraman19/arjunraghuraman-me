@@ -80,6 +80,7 @@ This is a snapshot comparison made when a session runs, not a live sync. JSA's o
 
 One line per meaningful change. Mirror each entry in the hub README's changelog.
 
+- 2026-11-01: Publications & Patents links use a new `--color-link` token (Wolfram StandardBlue #6699ff in dark; same hue at 73% brightness, #4a70ba, in light for 4.5:1). α-pinene plots re-exported from `alpha_pinene_analysis.wl` at one width (640 pt), 13 pt labels, shared padding and legends below, so labels match on the page; dark exports now use the site's text/frame colors. Arrhenius article ends with a "Get in touch" line for the notebook.
 - 2026-11-01: Publications & Patents: every publication title links to its DOI (checked against Crossref) and every patent number links to Google Patents (Singapore grants link to the `…A` publication, which is the one Google indexes); section headings use the accent green. Links were added to both `content/publications_patents/publications-patents.md` and the site copy.
 - 2026-11-01: α-pinene case study: added a reaction-scheme figure (`content/stats-math-wolfram/alpha_pinene_scheme_themed.wl`, from `alpha-pinene-scheme.nb`) and a structures figure drawn in ChemDraw's ACS Document 1996 style by `alpha_pinene_structures.py` (RDKit + cairosvg; PubChem 2D coordinates in `pubchem_2d/`, hand-placed α-pinene). Removed the "What this page deliberately leaves out" section.
 - 2026-11-01: Nav uses Wolfram StandardOrange (`--color-nav`); broader `/kinetics` intro and home-card copy.
