@@ -3,6 +3,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/statistics", label: "Statistics, Math & Wolfram" },
+  { href: "/kinetics", label: "Kinetics & PK" },
   { href: "/sdl-automation", label: "SDL & Automation" },
   { href: "/music", label: "Music" },
   { href: "/publications", label: "Publications & Patents" },
@@ -29,7 +30,7 @@ const isActive = (href: string) =>
         }
       </ul>
     </nav>
-    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme">
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to light theme">
       <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="4" />
         <line x1="12" y1="2" x2="12" y2="4" />
@@ -55,14 +56,16 @@ const isActive = (href: string) =>
     var setLabel = function (theme) {
       btn.setAttribute(
         "aria-label",
-        theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
+        theme === "light" ? "Switch to dark theme" : "Switch to light theme"
       );
     };
     setLabel(document.documentElement.getAttribute("data-theme"));
+    var themeColor = document.querySelector('meta[name="theme-color"]');
     btn.addEventListener("click", function () {
       var current = document.documentElement.getAttribute("data-theme");
-      var next = current === "dark" ? "light" : "dark";
+      var next = current === "light" ? "dark" : "light";
       document.documentElement.setAttribute("data-theme", next);
+      if (themeColor) themeColor.setAttribute("content", next === "light" ? "#f7f7f5" : "#18191b");
       setLabel(next);
       try {
         localStorage.setItem("theme", next);
@@ -144,15 +147,16 @@ const isActive = (href: string) =>
     border-color: var(--color-text-muted);
   }
 
-  .theme-toggle__icon--moon {
+  /* Dark is the default theme: show the moon unless light was chosen. */
+  .theme-toggle__icon--sun {
     display: none;
   }
 
-  :root[data-theme="dark"] .theme-toggle__icon--sun {
-    display: none;
-  }
-
-  :root[data-theme="dark"] .theme-toggle__icon--moon {
+  :root[data-theme="light"] .theme-toggle__icon--sun {
     display: block;
+  }
+
+  :root[data-theme="light"] .theme-toggle__icon--moon {
+    display: none;
   }
 </style>

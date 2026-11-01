@@ -1,0 +1,56 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const articles = (await getCollection("kinetics")).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout title="Kinetics & PK">
+  <article class="prose">
+    <h1>Kinetics &amp; PK</h1>
+    <p>
+      A rate law fitted to reactor data and a compartment model fitted to
+      plasma concentrations are the same problem underneath: a nonlinear
+      model, a handful of parameters, and data that may or may not pin them
+      down. The same toolkit applies to both: nonlinear least squares, the
+      Jacobian and the information matrix it builds, parameter
+      identifiability, and experimental design that puts the runs where the
+      information is. The worked examples here use Wolfram Language
+      throughout.
+    </p>
+    <ul class="article-list">
+      {
+        articles.map((entry) => (
+          <li>
+            <a href={`/kinetics/${entry.id}`}>{entry.data.title}</a>
+            {entry.data.tagline && <p>{entry.data.tagline}</p>}
+          </li>
+        ))
+      }
+    </ul>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .article-list li {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-2) 0;
+  }
+
+  .article-list a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .article-list p {
+    margin-top: 0.25rem;
+    color: var(--color-text-muted);
+  }
+</style>

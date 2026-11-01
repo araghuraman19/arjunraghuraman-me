@@ -1,14 +1,19 @@
-/* Quantitative Minimalism — design tokens */
+/* Quantitative Minimalism — design tokens.
+   Dark is the default theme: BaseLayout renders data-theme="dark" server-side
+   and only switches to light when the visitor has chosen it via the toggle
+   (saved in localStorage). The OS color-scheme preference is ignored. The
+   base :root therefore carries the dark tokens, so the page is dark even if
+   the attribute is missing (no JS, blocked script). */
 :root {
-  --color-bg: #f7f7f5;
-  --color-text: #232323;
-  --color-text-muted: #5c5c58;
-  --color-border: #d9d9d4;
-  --color-accent: #2e7d6e; /* single tweakable accent — swap this to re-theme the whole site */
-  --color-accent-contrast: #f7f7f5;
-  --color-axis-border: #deddd8;
-  --color-axis-tick: #8b897f;
-  color-scheme: light;
+  --color-bg: #18191b;
+  --color-text: #ece9e3;
+  --color-text-muted: #9a988f;
+  --color-border: #313236;
+  --color-accent: #4f9c8c; /* lightened, desaturated relative to the light-mode teal so it doesn't glow on dark */
+  --color-accent-contrast: #18191b;
+  --color-axis-border: #2a2b2f;
+  --color-axis-tick: #7f7d75;
+  color-scheme: dark;
 
   --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -22,35 +27,17 @@
   --space-5: 4rem;
 }
 
-/* Dark variant — applied on explicit user choice via data-theme="dark".
-   The inline anti-FOUC script in BaseLayout always sets this attribute
-   before first paint, so this rule covers every JS-enabled visit. */
-:root[data-theme="dark"] {
-  --color-bg: #18191b;
-  --color-text: #ece9e3;
-  --color-text-muted: #9a988f;
-  --color-border: #313236;
-  --color-accent: #4f9c8c; /* lightened, desaturated relative to the light-mode teal so it doesn't glow on dark */
-  --color-accent-contrast: #18191b;
-  --color-axis-border: #2a2b2f;
-  --color-axis-tick: #7f7d75;
-  color-scheme: dark;
-}
-
-/* No-JS fallback: if the anti-FOUC script never ran, data-theme is never
-   set, so fall back to matching system preference via CSS alone. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    --color-bg: #18191b;
-    --color-text: #ece9e3;
-    --color-text-muted: #9a988f;
-    --color-border: #313236;
-    --color-accent: #4f9c8c;
-    --color-accent-contrast: #18191b;
-    --color-axis-border: #2a2b2f;
-    --color-axis-tick: #7f7d75;
-    color-scheme: dark;
-  }
+/* Light variant — opt-in via the theme toggle (data-theme="light"). */
+:root[data-theme="light"] {
+  --color-bg: #f7f7f5;
+  --color-text: #232323;
+  --color-text-muted: #5c5c58;
+  --color-border: #d9d9d4;
+  --color-accent: #2e7d6e; /* single tweakable accent — swap this to re-theme the whole site */
+  --color-accent-contrast: #f7f7f5;
+  --color-axis-border: #deddd8;
+  --color-axis-tick: #8b897f;
+  color-scheme: light;
 }
 
 *,
@@ -178,22 +165,14 @@ pre code {
    --shiki-light/--shiki-dark custom properties instead of baked-in colors). */
 pre.astro-code,
 pre.astro-code span {
-  color: var(--shiki-light);
-  background-color: var(--shiki-light-bg);
-}
-
-:root[data-theme="dark"] pre.astro-code,
-:root[data-theme="dark"] pre.astro-code span {
   color: var(--shiki-dark);
   background-color: var(--shiki-dark-bg);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) pre.astro-code,
-  :root:not([data-theme="light"]):not([data-theme="dark"]) pre.astro-code span {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
-  }
+:root[data-theme="light"] pre.astro-code,
+:root[data-theme="light"] pre.astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
 }
 
 img {

@@ -17,24 +17,24 @@ const { title, description = "Arjun Raghuraman — statistics, math, and Wolfram
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#18191b" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title} · Arjun Raghuraman</title>
     <script is:inline>
+      // Dark is the default (rendered server-side on <html>). Only a saved
+      // toggle choice of "light" overrides it; the OS preference is ignored.
+      // If localStorage throws, nothing changes and the page stays dark.
       (function () {
         try {
-          var stored = localStorage.getItem("theme");
-          var theme =
-            stored === "light" || stored === "dark"
-              ? stored
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          document.documentElement.setAttribute("data-theme", theme);
+          if (localStorage.getItem("theme") === "light") {
+            document.documentElement.setAttribute("data-theme", "light");
+            document.querySelector('meta[name="theme-color"]').setAttribute("content", "#f7f7f5");
+          }
         } catch (e) {}
       })();
     </script>

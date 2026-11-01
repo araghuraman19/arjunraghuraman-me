@@ -85,3 +85,5 @@ This page sticks to the estimation method itself (weighted least squares general
 ---
 
 **Want the Wolfram Language code behind this?** It's not proprietary — the method is straight out of Bates & Watts — but a few of the tricks in it (using `SingularValueList` to catch data dependencies before fitting anything, eigen-decomposing the parameter covariance to isolate a poorly-identified direction) aren't things you see every day in a chemical engineering context. [Get in touch](/contact) and I'm happy to send it over.
+
+**Related:** [Arrhenius Reparameterization: Same Data, Better-Posed Parameters](/kinetics/arrhenius-reparameterization), on how the Jacobian and the eigensystem of JᵀJ diagnose, and a reference temperature removes, the near-total correlation between A and Ea in the standard Arrhenius fit.

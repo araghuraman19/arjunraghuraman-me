@@ -29,28 +29,19 @@ const darkSrc = src.replace(/(\.[^./]+)$/, "-dark$1");
 
   /* Chart PNGs are styled per theme at export time (can't be re-themed via
      CSS like the site's own SVG), so ship both and toggle with the same
-     data-theme mechanism used for the nav's sun/moon icons. display:none
-     keeps native lazy-loading from fetching the hidden variant. */
-  .figure__img--dark {
+     data-theme mechanism used for the nav's sun/moon icons. Dark is the
+     default theme, so the dark variant shows unless data-theme="light".
+     display:none keeps native lazy-loading from fetching the hidden variant. */
+  .figure__img--light {
     display: none;
   }
 
-  :root[data-theme="dark"] .figure__img--light {
-    display: none;
-  }
-
-  :root[data-theme="dark"] .figure__img--dark {
+  :root[data-theme="light"] .figure__img--light {
     display: block;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]):not([data-theme="dark"]) .figure__img--light {
-      display: none;
-    }
-
-    :root:not([data-theme="light"]):not([data-theme="dark"]) .figure__img--dark {
-      display: block;
-    }
+  :root[data-theme="light"] .figure__img--dark {
+    display: none;
   }
 
   .figure figcaption {

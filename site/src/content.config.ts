@@ -18,4 +18,13 @@ const caseStudies = defineCollection({
   }),
 });
 
-export const collections = { pages, caseStudies };
+const kinetics = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/kinetics" }),
+  schema: z.object({
+    title: z.string(),
+    tagline: z.string().optional(),
+    order: z.number().default(0),
+  }),
+});
+
+export const collections = { pages, caseStudies, kinetics };
