@@ -1,0 +1,92 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 15.0' *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["\[Alpha]-Pinene Reaction Scheme and Species", "Title"],
+
+Cell["\<\
+Thermal isomerization of \[Alpha]-pinene at 189.5 \[Degree]C (Fuguitt & \
+Hawkins, 1947), with the linear kinetic model of Box et al. (1973) as treated \
+in Bates & Watts (1988), Section 4.\
+\>", "Text"],
+
+Cell["Reaction scheme", "Section"],
+
+Cell["\<\
+\[Alpha]-Pinene isomerizes in parallel to dipentene (\[Theta]1) and \
+allo-ocimene (\[Theta]2). Allo-ocimene goes on to pyronene (\[Theta]3) and \
+forms dimer reversibly (\[Theta]4 forward, \[Theta]5 back).\
+\>", "Text"],
+
+Cell["\<\
+(* Reaction network: rate constants exp(\[Theta]i) as in Bates & Watts *)
+scheme = Graph[
+  {\"1 \[Alpha]-Pinene\", \"2 Dipentene\", \"3 Allo-ocimene\", \"4 Pyronene\", \"5 Dimer\"},
+  {Labeled[DirectedEdge[\"1 \[Alpha]-Pinene\", \"2 Dipentene\"], \"\[Theta]1\"],
+   Labeled[DirectedEdge[\"1 \[Alpha]-Pinene\", \"3 Allo-ocimene\"], \"\[Theta]2\"],
+   Labeled[DirectedEdge[\"3 Allo-ocimene\", \"4 Pyronene\"], \"\[Theta]3\"],
+   Labeled[DirectedEdge[\"3 Allo-ocimene\", \"5 Dimer\"], \"\[Theta]4\"],
+   Labeled[DirectedEdge[\"5 Dimer\", \"3 Allo-ocimene\"], \"\[Theta]5\"]},
+  VertexLabels -> Placed[\"Name\", Center],
+  VertexLabelStyle -> Directive[Black, 12],
+  VertexSize -> 0.5,
+  VertexShapeFunction -> \"RoundedRectangle\",
+  VertexStyle -> LightBlue,
+  EdgeStyle -> Directive[Black, Thick],
+  EdgeLabelStyle -> Directive[Black, 12, Italic],
+  GraphLayout -> \"LayeredDigraphEmbedding\",
+  ImageSize -> 500,
+  PlotLabel -> Style[\"\[Alpha]-Pinene thermal isomerization (Box et al., 1973)\", 14]]\
+\>", "Input"],
+
+Cell["Species structures", "Section"],
+
+Cell["\<\
+All four drawn species are C10H16 isomers (MW 136.24), so mass is conserved \
+and the five responses sum to 100%. That is one of the two dependencies \
+removed by the rotation matrix B. The dimer (f5) is a lumped C20H32 mixture \
+with no single structure. Pyronene was reported as a lump; \[Alpha]-pyronene \
+is shown as a representative isomer.\
+\>", "Text"],
+
+Cell["\<\
+(* Allo-ocimene and pyronene are not recognized by name, so SMILES are used *)
+species = {
+  {\"f1\", \"\[Alpha]-Pinene\",     Molecule[\"alpha-pinene\"]},
+  {\"f2\", \"Dipentene\",    Molecule[\"dipentene\"]},           (* racemic limonene *)
+  {\"f3\", \"Allo-ocimene\", Molecule[\"CC=C(C)C=CC=C(C)C\"]},   (* 2,6-dimethyl-2,4,6-octatriene *)
+  {\"f4\", \"\[Alpha]-Pyronene\",   Molecule[\"CC1=CC=CC(C)(C)C1C\"]}   (* 1,5,5,6-tetramethyl-1,3-cyclohexadiene *)
+};
+
+Grid[
+  Prepend[
+    {#[[1]], #[[2]],
+      MoleculePlot[#[[3]], ImageSize -> 150],
+      MoleculeValue[#[[3]], \"MolecularFormula\"],
+      MoleculeValue[#[[3]], \"MolecularMass\"]} & /@ species,
+    Style[#, Bold] & /@ {\"Response\", \"Species\", \"Structure\", \"Formula\", \"Mass\"}],
+  Frame -> All, Alignment -> Center, Spacings -> {2, 1}]\
+\>", "Input"],
+
+Cell["Kinetic model", "Section"],
+
+Cell["\<\
+(* Model ODEs (Bates & Watts, Example \[Alpha]-Pinene 3), log-parametrized rate constants *)
+odeSol[\[Theta]1_?NumberQ, \[Theta]2_?NumberQ, \[Theta]3_?NumberQ, \[Theta]4_?NumberQ, \[Theta]5_?NumberQ] := NDSolve[
+  {f1'[t] == -(Exp[\[Theta]1] + Exp[\[Theta]2]) f1[t],
+   f2'[t] == Exp[\[Theta]1] f1[t],
+   f3'[t] == Exp[\[Theta]2] f1[t] - (Exp[\[Theta]3] + Exp[\[Theta]4]) f3[t] + Exp[\[Theta]5] f5[t],
+   f4'[t] == Exp[\[Theta]3] f3[t],
+   f5'[t] == Exp[\[Theta]4] f3[t] - Exp[\[Theta]5] f5[t],
+   f1[0] == 100, f2[0] == 0, f3[0] == 0, f4[0] == 0, f5[0] == 0},
+  {f1, f2, f3, f4, f5}, {t, 0, 40000}][[1]];\
+\>", "Input"]
+},
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)

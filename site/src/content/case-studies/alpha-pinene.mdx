@@ -17,6 +17,18 @@ The α-pinene pyrolysis dataset (originally due to Fuguitt & Hawkins, later anal
 
 This gives a 5-parameter linear ODE system (rate constants θ₁ ... θ₅, fit on a log scale so they stay positive).
 
+<Figure
+  src="/images/stats/alpha_pinene_scheme.png"
+  alt="Reaction network: α-pinene converts to dipentene (θ₁) and to allo-ocimene (θ₂); allo-ocimene converts to pyronene (θ₃) and to dimer (θ₄), and the dimer converts back to allo-ocimene (θ₅)."
+  caption="Reaction scheme for the thermal isomerization of α-pinene at 189.5 °C (Fuguitt & Hawkins, 1947), with the linear kinetic model of Box et al. (1973). Each arrow is a first-order step with rate constant θᵢ."
+/>
+
+<Figure
+  src="/images/stats/alpha_pinene_species.png"
+  alt="Skeletal structures of α-pinene (f₁), dipentene (f₂), allo-ocimene (f₃) and α-pyronene (f₄), each labeled C₁₀H₁₆, 136.24 g/mol."
+  caption="The measured species. All four are C₁₀H₁₆ isomers, so mass is conserved and the five responses sum to 100%. Dipentene is racemic limonene; pyronene was reported as a lump, and α-pyronene is shown as a representative isomer. The dimer (f₅) is a lumped C₂₀H₃₂ mixture with no single structure."
+/>
+
 ## Why you can't just fit all 5 responses directly
 
 Two things break the naive approach here:
@@ -77,10 +89,6 @@ Two standard checks worth showing on the page:
 ## A different lens on the same theme
 
 The core question here — how many parameters (or how much of the data) can you responsibly use, given limited, correlated, or noisy measurements — shows up under a different name in Kimberley McAuley's group's work on model selection criteria. Eghtesadi, Wu & McAuley's [*Development of a Model Selection Criterion for Accurate Model Predictions at Desired Operating Conditions*](https://doi.org/10.1021/ie302408b) (*Ind. Eng. Chem. Res.* 52, 12297–12308, 2013) tackles a related but distinct problem: rather than asking how to combine correlated *responses* (this page's question), it asks how many *parameters* to estimate from a model when data are too sparse or correlated to estimate all of them reliably, using a mean-squared-error criterion that trades off bias against variance. Their group's broader body of work leans heavily on weighted least squares as the workhorse estimation method, extending it (via error-in-variables models) rather than replacing it — a useful contrast to the determinant-criterion route taken here. I had the chance to meet Dr. McAuley at NASCRE-5, where this connection came up directly.
-
-## What this page deliberately leaves out
-
-This page sticks to the estimation method itself (weighted least squares generalized to the determinant criterion, with the rotation trick for handling dependent responses) rather than getting into the fully Bayesian treatment of the same problem (posterior densities over Θ and Σ, Cholesky-based numerically stable likelihood evaluation, HPD regions). That's a deeper rabbit hole that's more appropriate for a follow-on technical note.
 
 ---
 

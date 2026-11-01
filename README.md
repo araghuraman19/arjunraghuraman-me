@@ -80,6 +80,9 @@ This is a snapshot comparison made when a session runs, not a live sync. JSA's o
 
 One line per meaningful change. Mirror each entry in the hub README's changelog.
 
+- 2026-11-01: Publications & Patents: every publication title links to its DOI (checked against Crossref) and every patent number links to Google Patents (Singapore grants link to the `…A` publication, which is the one Google indexes); section headings use the accent green. Links were added to both `content/publications_patents/publications-patents.md` and the site copy.
+- 2026-11-01: α-pinene case study: added a reaction-scheme figure (`content/stats-math-wolfram/alpha_pinene_scheme_themed.wl`, from `alpha-pinene-scheme.nb`) and a structures figure drawn in ChemDraw's ACS Document 1996 style by `alpha_pinene_structures.py` (RDKit + cairosvg; PubChem 2D coordinates in `pubchem_2d/`, hand-placed α-pinene). Removed the "What this page deliberately leaves out" section.
+- 2026-11-01: Nav uses Wolfram StandardOrange (`--color-nav`); broader `/kinetics` intro and home-card copy.
 - 2026-10-31: New interest area, Kinetics & PK (`/kinetics`, `kinetics` content collection). First article: Arrhenius reparameterization, cross-linked with α-pinene. Raw material in `content/kinetics/`, including `ArrheniusJacobianEigen_themed.wl`, which exports light and dark figures.
 - 2026-10-31: Dark mode is now the default theme. Light is opt-in via the toggle; the OS preference is ignored. Added a `theme-color` meta tag.
 - 2026-09-22: Added a Publications & Patents row to `CLAUDE.md`'s Content Status table (parity with README's own table).
