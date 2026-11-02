@@ -50,6 +50,19 @@
   box-sizing: border-box;
 }
 
+/* Root type size. Every font-size, spacing token and content width is in rem,
+   so this one value scales the whole site proportionally (line length stays
+   constant). 18px on laptops/desktops, 17px on phones. */
+html {
+  font-size: 112.5%;
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 106.25%;
+  }
+}
+
 body {
   margin: 0;
   background: var(--color-bg);
@@ -78,7 +91,7 @@ h4 {
 }
 
 h1 {
-  font-size: 2.25rem;
+  font-size: 1.875rem;
   letter-spacing: -0.01em;
 }
 
